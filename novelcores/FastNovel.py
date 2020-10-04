@@ -6,5 +6,5 @@ from requests.exceptions import RequestException, HTTPError, InvalidSchema, Miss
 
 
 class FastNovel:
-    slash = 1
-    url = "https://fastnovel.net"
+    slash = 3
+    url = "https://fastnovel.net/"

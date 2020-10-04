@@ -28,15 +28,22 @@ class Source:
         if isinstance(url, str):
             if url.strip() != "":
                 if "http" in url:
-                    c = 3
-                    if url[-1] == "/":
-                        c -= 1
                     for source in source_obj:
                         if source.url in url:
                             Source.source_set = source
-                            return True
+                            break
                     if Source.source_set is None:
                         raise UnknowSourceError("Failed to find source sheme.")
+                    else:
+                        c = Source.source_set.slash
+                        if url[-1] == "/":
+                            s = -1
+                        else:
+                            s = 0
+                        if c == url.count("/")+s:
+                            return True
+                        else:
+                            raise IncorrectURL("URL source is found, but the wrong page is selected.")
                 else:
                     raise IncorrectURL("URL incorrect. No HTTP or HTTPS in the URL.")
             else:
@@ -45,4 +52,6 @@ class Source:
             raise TypeError("URL must be a string type!")
 
 
+x = Source.validate("https://fastnovel.net/")
+print(x)
 
