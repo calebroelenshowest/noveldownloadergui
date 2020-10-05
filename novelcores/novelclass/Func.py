@@ -28,11 +28,18 @@ class ExFunc:
             print(exception)
 
     @staticmethod
-    def get_title(soup: BeautifulSoup, tag: str, tag_class: str) -> str:
+    def get_title(soup: BeautifulSoup, tag: str, tag_class: str, banned=None, class_req=True) -> str:
         try:
-            titles = soup.findAll(tag, class_=tag_class)
-            title = titles[0]
-            return title
+            if class_req:
+                title = soup.find(tag, class_=tag_class).text
+            else:
+                title = soup.find(tag).text
+            if banned is None:
+                return title
+            else:
+                for banned_str in banned:
+                    title = title.replace(banned_str, "")
+                return title
         except Exception as exception:
             print("Failed to get title:")
             print(exception)
