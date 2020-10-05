@@ -51,3 +51,6 @@ class Source:
         else:
             raise TypeError("URL must be a string type!")
 
+    @staticmethod
+    def get_novel_controller():
+        return Source.source_set
