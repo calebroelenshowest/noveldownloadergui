@@ -6,4 +6,5 @@ from requests.exceptions import RequestException, HTTPError, InvalidSchema, Miss
 
 
 class NovelHall:
-    pass
+    slash = 3
+    url = "https://novelhall.com/"

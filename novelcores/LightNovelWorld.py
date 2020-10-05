@@ -6,4 +6,5 @@ from requests.exceptions import RequestException, HTTPError, InvalidSchema, Miss
 
 
 class LightNovelWorld:
-    pass
+    slash = 4
+    url = "https://www.lightnovelworld.com/novel/"

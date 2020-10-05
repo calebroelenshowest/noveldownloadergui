@@ -51,7 +51,3 @@ class Source:
         else:
             raise TypeError("URL must be a string type!")
 
-
-x = Source.validate("https://fastnovel.net/")
-print(x)
-
