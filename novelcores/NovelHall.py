@@ -15,9 +15,14 @@ class NovelHall:
     title_tag_class = ""
 
     @staticmethod
-    def get_soup(url: str):
+    def get_soup(url: str) -> BeautifulSoup:
         return get_soup(url)
 
     @staticmethod
-    def get_title(soup: BeautifulSoup):
+    def get_title(soup: BeautifulSoup) -> str:
         return get_title(soup, NovelHall.title_tag, NovelHall.title_tag_class, class_req=False)
+
+    @staticmethod
+    def get_author(soup: BeautifulSoup) -> str:
+        prop = soup.find("meta", property="books:author")["content"]
+        return str(prop)

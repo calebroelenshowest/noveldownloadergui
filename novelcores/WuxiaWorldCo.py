@@ -21,3 +21,9 @@ class WuxiaWorldCo:
     @staticmethod
     def get_title(soup: BeautifulSoup) -> str:
         return get_title(soup, WuxiaWorldCo.title_tag, WuxiaWorldCo.title_tag_class)
+
+    @staticmethod
+    def get_author(soup: BeautifulSoup) -> str:
+        author_soup = soup.find("div", class_="author")
+        author = BeautifulSoup(str(author_soup), "html.parser").find("span", class_="name").text
+        return str(author)

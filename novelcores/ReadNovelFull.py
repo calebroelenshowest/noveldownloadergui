@@ -21,3 +21,9 @@ class ReadNovelFull:
     @staticmethod
     def get_title(soup: BeautifulSoup) -> str:
         return get_title(soup, ReadNovelFull.title_tag, ReadNovelFull.title_tag_class)
+
+    @staticmethod
+    def get_author(soup: BeautifulSoup) -> str:
+        author_sp = soup.find("span", itemprop="author")
+        author = BeautifulSoup(str(author_sp), "html.parser").find("meta", itemprop="name")["content"]
+        return str(author)

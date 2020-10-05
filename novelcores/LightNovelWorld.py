@@ -21,3 +21,9 @@ class LightNovelWorld:
     @staticmethod
     def get_title(soup: BeautifulSoup) -> str:
         return get_title(soup, LightNovelWorld.title_tag, LightNovelWorld.title_tag_class)
+
+    @staticmethod
+    def get_author(soup: BeautifulSoup) -> str:
+        author_div = soup.find("div", class_="author")
+        author_a = str(BeautifulSoup(str(author_div), 'html.parser').find("a")["title"])
+        return author_a

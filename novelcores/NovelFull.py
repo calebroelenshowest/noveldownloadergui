@@ -21,3 +21,14 @@ class NovelFull:
     @staticmethod
     def get_title(soup: BeautifulSoup) -> str:
         return get_title(soup, NovelFull.title_tag, NovelFull.title_tag_class)
+
+    @staticmethod
+    def get_author(soup: BeautifulSoup) -> str:
+        try:
+            div_info = soup.find("div", class_="info")
+            div_div = BeautifulSoup(str(div_info), 'html.parser').find("div")
+            author = BeautifulSoup(str(div_div), "html.parser").find("a").text
+            return author
+        except Exception:
+            return "Unknown"
+

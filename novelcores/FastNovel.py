@@ -22,3 +22,9 @@ class FastNovel:
     def get_title(soup: BeautifulSoup) -> str:
         return get_title(soup, FastNovel.title_tag, FastNovel.title_tag_class)
 
+    @staticmethod
+    def get_author(soup: BeautifulSoup) -> str:
+        meta_data = soup.find("ul", class_="meta-data")
+        author_item = BeautifulSoup(str(meta_data), 'html.parser').find("li")
+        author = BeautifulSoup(str(author_item), 'html.parser').find("a").text
+        return str(author)

@@ -21,3 +21,10 @@ class NovelOnlineFull:
     @staticmethod
     def get_title(soup: BeautifulSoup) -> str:
         return get_title(soup, NovelOnlineFull.title_tag, NovelOnlineFull.title_tag_class, class_req=False)
+
+    @staticmethod
+    def get_author(soup: BeautifulSoup) -> str:
+        author_soup = soup.find("ul", class_="truyen_info_right")
+        author_item = BeautifulSoup(str(author_soup), "html.parser").findAll("li")[1]
+        author = BeautifulSoup(str(author_item), "html.parser").find("a").text
+        return str(author)

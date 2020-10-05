@@ -19,5 +19,11 @@ class Novel27:
         return get_soup(url)
 
     @staticmethod
-    def get_title(soup: BeautifulSoup):
+    def get_title(soup: BeautifulSoup) -> str:
         return get_title(soup, Novel27.title_tag, Novel27.title_tag_class, ["online free - Novel27", "Read"], False)
+
+    @staticmethod
+    def get_author(soup: BeautifulSoup) -> str:
+        author_div = soup.find("div", class_="author-content")
+        author_item = BeautifulSoup(str(author_div), 'html.parser').find("a").text
+        return author_item

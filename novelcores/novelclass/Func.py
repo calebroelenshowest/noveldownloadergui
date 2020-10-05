@@ -43,3 +43,4 @@ class ExFunc:
         except Exception as exception:
             print("Failed to get title:")
             print(exception)
+
