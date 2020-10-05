@@ -26,3 +26,13 @@ class ExFunc:
         except RequestException as exception:
             print("Exception in getting URL")
             print(exception)
+
+    @staticmethod
+    def get_title(soup: BeautifulSoup, tag: str, tag_class: str) -> str:
+        try:
+            titles = soup.findAll(tag, class_=tag_class)
+            title = titles[0]
+            return title
+        except Exception as exception:
+            print("Failed to get title:")
+            print(exception)
