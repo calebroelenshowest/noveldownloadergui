@@ -1,6 +1,6 @@
 class Chapter:
 
-    def __init__(self, title, text, identifier, text_html=True):
+    def __init__(self, title: str, text: list, identifier: int, text_html=True):
         self.__title = title
         self.__text = text
         self.__identifier = identifier
@@ -8,11 +8,11 @@ class Chapter:
         self.__is_text_html = text_html
 
     @property
-    def title(self):
+    def title(self) -> str:
         return self.__title
 
     @title.setter
-    def title(self, value):
+    def title(self, value: str):
         if isinstance(value, str):
             if value == "":
                 raise ValueError("Title cannot be empty")
@@ -22,11 +22,11 @@ class Chapter:
             raise TypeError("Title must be type string.")
 
     @property
-    def identifier(self):
+    def identifier(self) -> int:
         return self.__identifier
 
     @identifier.setter
-    def identifier(self, value):
+    def identifier(self, value: int):
         if isinstance(value, int):
             if value >= 0:
                 self.__identifier = value
@@ -35,7 +35,7 @@ class Chapter:
         else:
             raise TypeError("Identifier must be an int.")
 
-    def generate_html(self):
+    def generate_html(self) -> str:
         self.__html = f"<h1>{self.__title}</h1>"
         if self.__is_text_html:
             self.__html += self.__text
@@ -46,5 +46,5 @@ class Chapter:
             return self.__html
 
     @property
-    def html(self):
+    def html(self) -> str:
         return self.__html
