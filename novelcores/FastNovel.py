@@ -39,10 +39,16 @@ class FastNovel:
             chapters.append(chapter_item)
         return chapters
 
+    @staticmethod
+    def get_url_image(soup: BeautifulSoup) -> str:
+        img_soup = soup.find("div", class_="book-cover")["data-original"]
+        return str(img_soup)
+
 
 if __name__ == "__main__":
     # Test of Fastnovel.net
-    soup = FastNovel.get_soup("https://fastnovel.net/the-conquerors-bloodline-9825/")
-    print(FastNovel.get_url_chapters(soup))
-    print(FastNovel.get_title(soup))
-    print(FastNovel.get_author(soup))
+    soup_x = FastNovel.get_soup("https://fastnovel.net/the-conquerors-bloodline-9825/")
+    print(FastNovel.get_url_chapters(soup_x))
+    print(FastNovel.get_title(soup_x))
+    print(FastNovel.get_author(soup_x))
+    print(FastNovel.get_url_image(soup_x))
