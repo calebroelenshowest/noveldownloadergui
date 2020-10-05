@@ -28,7 +28,7 @@ class ExFunc:
             print(exception)
 
     @staticmethod
-    def get_title(soup: BeautifulSoup, tag: str, tag_class: str, banned=None, class_req=True) -> str:
+    def get_title(soup: BeautifulSoup, tag: str, tag_class: str, banned: list = None, class_req: bool = True) -> str:
         try:
             if class_req:
                 title = soup.find(tag, class_=tag_class).text
