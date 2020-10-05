@@ -28,3 +28,21 @@ class FastNovel:
         author_item = BeautifulSoup(str(meta_data), 'html.parser').find("li")
         author = BeautifulSoup(str(author_item), 'html.parser').find("a").text
         return str(author)
+
+    @staticmethod
+    def get_url_chapters(soup: BeautifulSoup) -> list:
+        chapters = []
+        chapter_soup = soup.findAll("a", class_="chapter")
+        for url in list(chapter_soup):
+            chapter_item = {"url": "https://fastnovel.net" + url["href"],
+                            "title": url.text}
+            chapters.append(chapter_item)
+        return chapters
+
+
+if __name__ == "__main__":
+    # Test of Fastnovel.net
+    soup = FastNovel.get_soup("https://fastnovel.net/the-conquerors-bloodline-9825/")
+    print(FastNovel.get_url_chapters(soup))
+    print(FastNovel.get_title(soup))
+    print(FastNovel.get_author(soup))
