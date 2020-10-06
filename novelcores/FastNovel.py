@@ -15,7 +15,7 @@ class FastNovel:
     title_tag_class = "name"
 
     @staticmethod
-    def get_soup(url: str):
+    def get_soup(url: str) -> BeautifulSoup:
         return get_soup(url)
 
     @staticmethod

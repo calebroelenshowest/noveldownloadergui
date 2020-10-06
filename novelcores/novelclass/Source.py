@@ -24,7 +24,7 @@ class Source:
     source_set = None
 
     @staticmethod
-    def validate(url):
+    def validate(url: str):
         if isinstance(url, str):
             if url.strip() != "":
                 if "http" in url:

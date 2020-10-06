@@ -8,15 +8,21 @@ from requests.exceptions import RequestException, HTTPError, InvalidSchema, Miss
 class ExFunc:
 
     @staticmethod
-    def get_soup(url: str):
+    def get_soup(url: str, anti_bot: bool = False):
         # Please check URL beforehand using Source class
         try:
-            response = get(url)
-            if response.status_code == 200:
-                soup = BeautifulSoup(response.content, 'html.parser')
-                return soup
+            if anti_bot:
+                response = get(url, headers={'User-Agent': 'Mozilla/5.0'})
+                if response.status_code == 200:
+                    soup = BeautifulSoup(response.content, 'html.parser')
+                    return soup
             else:
-                raise RequestException("Status code is not 200: ", response.status_code)
+                response = get(url)
+                if response.status_code == 200:
+                    soup = BeautifulSoup(response.content, 'html.parser')
+                    return soup
+                else:
+                    raise RequestException("Status code is not 200: ", response.status_code)
         except HTTPError:
             print("HTTP error")
         except InvalidSchema:
