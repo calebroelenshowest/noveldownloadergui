@@ -26,3 +26,11 @@ class NovelHall:
     def get_author(soup: BeautifulSoup) -> str:
         prop = soup.find("meta", property="books:author")["content"]
         return str(prop)
+
+    @staticmethod
+    def get_url_chapters(soup: BeautifulSoup) -> list:
+        pass
+
+    @staticmethod
+    def get_url_image(soup: BeautifulSoup) -> str:
+        pass

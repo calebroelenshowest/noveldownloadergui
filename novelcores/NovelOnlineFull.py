@@ -28,3 +28,11 @@ class NovelOnlineFull:
         author_item = BeautifulSoup(str(author_soup), "html.parser").findAll("li")[1]
         author = BeautifulSoup(str(author_item), "html.parser").find("a").text
         return str(author)
+
+    @staticmethod
+    def get_url_chapters(soup: BeautifulSoup) -> list:
+        pass
+
+    @staticmethod
+    def get_url_image(soup: BeautifulSoup) -> str:
+        pass

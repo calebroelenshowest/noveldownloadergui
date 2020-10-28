@@ -32,3 +32,10 @@ class NovelFull:
         except Exception:
             return "Unknown"
 
+    @staticmethod
+    def get_url_chapters(soup: BeautifulSoup) -> list:
+        pass
+
+    @staticmethod
+    def get_url_image(soup: BeautifulSoup) -> str:
+        pass

@@ -27,3 +27,15 @@ class Novel27:
         author_div = soup.find("div", class_="author-content")
         author_item = BeautifulSoup(str(author_div), 'html.parser').find("a").text
         return author_item
+
+    @staticmethod
+    def get_url_chapters(soup: BeautifulSoup) -> list:
+        pass
+
+    @staticmethod
+    def get_url_image(soup: BeautifulSoup) -> str:
+        pass
+
+
+if __name__ == "__main__":
+    pass

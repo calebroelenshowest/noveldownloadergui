@@ -27,3 +27,11 @@ class WuxiaWorldCo:
         author_soup = soup.find("div", class_="author")
         author = BeautifulSoup(str(author_soup), "html.parser").find("span", class_="name").text
         return str(author)
+
+    @staticmethod
+    def get_url_chapters(soup: BeautifulSoup) -> list:
+        pass
+
+    @staticmethod
+    def get_url_image(soup: BeautifulSoup) -> str:
+        pass

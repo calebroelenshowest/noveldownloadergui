@@ -27,3 +27,11 @@ class ReadNovelFull:
         author_sp = soup.find("span", itemprop="author")
         author = BeautifulSoup(str(author_sp), "html.parser").find("meta", itemprop="name")["content"]
         return str(author)
+
+    @staticmethod
+    def get_url_chapters(soup: BeautifulSoup) -> list:
+        pass
+
+    @staticmethod
+    def get_url_image(soup: BeautifulSoup) -> str:
+        pass
