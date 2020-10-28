@@ -16,6 +16,10 @@ class ExFunc:
                 if response.status_code == 200:
                     soup = BeautifulSoup(response.content, 'html.parser')
                     return soup
+                else:
+                    print("Cannot connect to ", url)
+                    print("Code: ", response.status_code)
+                    raise HTTPError("Failed")
             else:
                 response = get(url)
                 if response.status_code == 200:
