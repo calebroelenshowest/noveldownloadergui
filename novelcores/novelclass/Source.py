@@ -13,11 +13,11 @@ from novelcores.FastNovel import FastNovel
 from novelcores.LightNovelWorld import LightNovelWorld
 from novelcores.Novel27 import Novel27
 from novelcores.NovelFull import NovelFull
-from novelcores.NovelHall import NovelHall
+from novelcores.NovelHall import NovelHall  # Disabled
 from novelcores.NovelOnlineFull import NovelOnlineFull
 from novelcores.ReadNovelFull import ReadNovelFull
 from novelcores.WuxiaWorldCo import WuxiaWorldCo
-source_obj = [FastNovel, LightNovelWorld, Novel27, NovelFull, NovelHall, NovelOnlineFull, ReadNovelFull, WuxiaWorldCo]
+source_obj = [FastNovel, LightNovelWorld, Novel27, NovelFull, NovelOnlineFull, ReadNovelFull, WuxiaWorldCo]
 
 
 class Source:

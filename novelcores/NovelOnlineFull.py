@@ -31,8 +31,20 @@ class NovelOnlineFull:
 
     @staticmethod
     def get_url_chapters(soup: BeautifulSoup) -> list:
-        pass
+        new_soup = soup.find("div", class_="chapter-list").find_all("div", class_="row")
+        chapters = []
+        for item in new_soup:
+            chapter_item = item.find("a")
+            new_item = {"title": chapter_item["title"], "url": chapter_item.href}
+            chapters.append(new_item)
+        return chapters
 
     @staticmethod
     def get_url_image(soup: BeautifulSoup) -> str:
-        pass
+        image = soup.find("meta", property="og:image")
+        return image["content"]
+
+
+if __name__ == "__main__":
+    novel_soup = NovelOnlineFull.get_soup("https://novelonlinefull.com/novel/a_mistaken_marriage_match_mysteries_in_the_imperial_harem")
+    chapters = NovelOnlineFull.get_url_chapters(novel_soup)

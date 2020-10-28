@@ -16,7 +16,7 @@ class NovelHall:
 
     @staticmethod
     def get_soup(url: str) -> BeautifulSoup:
-        return get_soup(url)
+        return get_soup(url, True)
 
     @staticmethod
     def get_title(soup: BeautifulSoup) -> str:
@@ -29,8 +29,23 @@ class NovelHall:
 
     @staticmethod
     def get_url_chapters(soup: BeautifulSoup) -> list:
-        pass
+        chapters = []
+        soup_chapters = soup.find("div", class_="book-catalog inner mt20  hidden-xs")
+        print(soup_chapters)
+        for chapter in soup_chapters:
+            new_chapter = chapter.find("a")
+            title = new_chapter.text
+            url = "https://novelhall.com/" + new_chapter["href"]
+            chapters.append({"url": url, "title": title})
+        return chapters
 
     @staticmethod
     def get_url_image(soup: BeautifulSoup) -> str:
         pass
+
+
+if __name__ == "__main__":
+    soup = NovelHall.get_soup("https://novelhall.com/Invincible-136/")
+    print(soup)
+    chapters = NovelHall.get_url_chapters(soup)
+    print(chapters)
