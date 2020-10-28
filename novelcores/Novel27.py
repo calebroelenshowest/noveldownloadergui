@@ -30,12 +30,22 @@ class Novel27:
 
     @staticmethod
     def get_url_chapters(soup: BeautifulSoup) -> list:
-        pass
+        chapters = []
+        li_elements = soup.find_all("li", class_="wp-manga-chapter")
+        for li in li_elements:
+            a_tag = li.find("a")
+            chapter = {"url": a_tag["href"], "title": a_tag.text}
+            chapters.append(chapter)
+        print(f"Found {len(chapters)} chapters.")
+        return list(reversed(chapters))
 
     @staticmethod
     def get_url_image(soup: BeautifulSoup) -> str:
-        pass
+        image = soup.find("meta", property="og:image")
+        return image["content"]
 
 
 if __name__ == "__main__":
-    pass
+    soup_x = Novel27.get_soup("https://novel27.com/novel/cultivation-chat-group/")
+    chapters_x = Novel27.get_url_chapters(soup_x)
+    image_x = Novel27.get_url_image(soup_x)
