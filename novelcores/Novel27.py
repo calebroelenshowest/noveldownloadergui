@@ -25,7 +25,7 @@ class Novel27:
     @staticmethod
     def get_author(soup: BeautifulSoup) -> str:
         author_div = soup.find("div", class_="author-content")
-        author_item = BeautifulSoup(str(author_div), 'html.parser').find("a").text
+        author_item = author_div.find("a").text
         return author_item
 
     @staticmethod
@@ -49,3 +49,4 @@ if __name__ == "__main__":
     soup_x = Novel27.get_soup("https://novel27.com/novel/cultivation-chat-group/")
     chapters_x = Novel27.get_url_chapters(soup_x)
     image_x = Novel27.get_url_image(soup_x)
+    author_x = Novel27.get_author(soup_x)
