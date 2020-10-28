@@ -29,9 +29,26 @@ class ReadNovelFull:
         return str(author)
 
     @staticmethod
+    def __get_novel_id(soup: BeautifulSoup) -> int:
+        return int(soup.find("div", id="rating")["data-novel-id"])
+
+    @staticmethod
     def get_url_chapters(soup: BeautifulSoup) -> list:
-        pass
+        url = f"https://readnovelfull.com/ajax/chapter-archive?novelId={ReadNovelFull.__get_novel_id(soup)}"
+        links = get_soup(url, True).find_all("a")
+        chapters = []
+        for chapter in links:
+            template = {"url": chapter.href, "title": chapter["title"]}
+            chapters.append(template)
+        return chapters
 
     @staticmethod
     def get_url_image(soup: BeautifulSoup) -> str:
-        pass
+        image = soup.find("meta", attrs={"name": "image"})
+        return image["content"]
+
+
+if __name__ == "__main__":
+    soup_X = ReadNovelFull.get_soup("https://readnovelfull.com/ghost-emperor-wild-wife-dandy-eldest-miss.html")
+    x = ReadNovelFull.get_url_chapters(soup_X)
+    image = ReadNovelFull.get_url_image(soup_X)
