@@ -3,12 +3,13 @@ from PyQt5.QtCore import pyqtSlot as register
 from pubsub.pub import sendMessage, subscribe
 from novelcores.novelclass.Exceptions import IncorrectURL, UnknowSourceError
 from threading import Thread
-from novelcores.novelclass.Func import ExFunc
 import gui.Listeners as AppList
+from gui.Listeners import Message, Download, NovelPub
 import novelcores.novelclass.Source as SourceManager
 import sys
 import os
 import subprocess
+from novelcores.novelclass.Chapter import Chapter
 
 
 class GUI(QtWidgets.QMainWindow):
@@ -153,10 +154,12 @@ class GUI(QtWidgets.QMainWindow):
 
         self.source = None
         self.url = ""
+        self.__novel_info = {}
 
         # Threads
 
         self.download_novel_info_thread = Thread(target=self.download_novel_info)
+        self.download_novel_chapters_thread = Thread(target=self.download_chapters)
 
     def set_text(self):
         self.tabs.setToolTip("Shows novel info")
@@ -175,10 +178,14 @@ class GUI(QtWidgets.QMainWindow):
         # Level: GUI
         self.open_folder_btn.clicked.connect(self.open_folder)
         self.download_info_btn.clicked.connect(self.download_info_btn_event)
+        self.download_epub_btn.clicked.connect(self.download_chapters_btn_listener)
 
         # Level: PubSub
         subscribe(self.download_bar_listener, "download_number")
         subscribe(self.exceptions_listener, "error")
+        subscribe(NovelPub.download_novel_info, "novel_info_start")
+        subscribe(self.add_to_output_box, "message")
+        subscribe(self.novel_display_update, "novel_display_update")
 
     def load_sources(self):
         print("Loading cores")
@@ -189,14 +196,20 @@ class GUI(QtWidgets.QMainWindow):
             self.add_to_output_box(f"Found source {name_s}")
 
     def download_novel_info(self):
-        self.add_to_output_box(f"NovelController '{self.source.__name__}' passed to Thread. Getting novel information..")
-        soup = self.source.get_soup(self.url)
-        title = self.source.get_title(soup)
-        self.add_to_output_box(f"Found title: {title}")
-        if ExFunc.download_image(self.source.get_url_image(soup)):
-            self.add_to_output_box("Downloaded image")
-        else:
-            self.add_to_output_box("Could not find image!")
+        info = {"source": self.source, "url": self.url}
+        sendMessage("novel_info_start", novel_info=info)
+
+    def set_image(self, image_path):
+        self.image_pixmap = QtGui.QPixmap(image_path)
+        self.image_label.setPixmap(self.image_pixmap)
+        self.image_label.resize(self.image_pixmap.width(), self.image_pixmap.height())
+
+    def add_chapter(self, content: str):
+        item = QtGui.QStandardItem(content)
+        self.chapter_list.model().appendRow(item)
+
+    def clear_chapter_window(self):
+        self.chapter_list.model().removeRows(0, self.chapter_list.model().rowCount())
 
     @register()
     def open_folder(self):
@@ -214,7 +227,8 @@ class GUI(QtWidgets.QMainWindow):
                 self.source = SourceManager.Source.get_novel_controller()
                 self.add_to_output_box(f"Correct source! Found {self.source.__name__}")
                 self.url = url
-                self.download_novel_info_thread.start()
+                del self.download_novel_info_thread
+                self.download_novel_info_thread = Thread(target=self.download_novel_info).start()
             else:
                 self.add_to_output_box(f"Failed to get source from url!")
         except Exception as exe:
@@ -232,6 +246,30 @@ class GUI(QtWidgets.QMainWindow):
 
     def get_input_box(self):
         return self.url_input_box.text()
+
+    def novel_display_update(self, novel_info):
+        self.title_value.setText(novel_info["title"])
+        self.chapter_value.setText(str(len(novel_info["chapters"])))
+        self.clear_chapter_window()
+        for item in novel_info["chapters"]:
+            self.add_chapter(item["title"])
+        if isinstance(novel_info["image"], str):
+            self.set_image(novel_info["image"])
+        self.__novel_info = novel_info
+
+    def download_chapters_btn_listener(self):
+        if SourceManager.Source.source_set is None:
+            Message.error("Cannot download, no source set.")
+        else:
+            del self.download_novel_chapters_thead
+            self.download_novel_chapters_thread = Thread(target=self.download_chapters).start()
+
+    def download_chapters(self):
+        chapters = self.__novel_info["chapters"]
+        chapter_objs = []
+        for identifier, chapter in enumerate(chapters):
+            new_chapter = Chapter(chapter.url, chapter.title, identifier)
+            chapter_objs.append(new_chapter)
 
 
 if __name__ == "__main__":

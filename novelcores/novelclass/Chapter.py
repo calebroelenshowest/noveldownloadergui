@@ -1,11 +1,18 @@
+from requests import get
+from pubsub.pub import subscribe, sendMessage
+from bs4 import BeautifulSoup
+import gui.Listeners
+
+
 class Chapter:
 
-    def __init__(self, title: str, text: list, identifier: int, text_html=True):
+    def __init__(self, url: str, title: str, identifier: int, text_html=True):
         self.__title = title
-        self.__text = text
+        self.__text = []
         self.__identifier = identifier
         self.__html = ""
         self.__is_text_html = text_html
+        self.__url = url
 
     @property
     def title(self) -> str:
@@ -44,6 +51,19 @@ class Chapter:
             for text in self.__text:
                 self.__html += f"<p>{text}</p>"
             return self.__html
+
+    def download_chapter(self, tags, class_tags="") -> str:
+        download = get(self.__url)
+        if download.status_code == 200:
+            soup = BeautifulSoup(download.content, 'html.parser')
+            if class_tags == "":
+                html_p_tags = soup.find_all(tags)
+            else:
+                html_p_tags = soup.find_all(tags, class_=class_tags)
+
+            self.__html = "".join(map(str, html_p_tags))
+        else:
+            gui.Listeners.Message.error(f"Failed to download chapter: {self.__title} ")
 
     @property
     def html(self) -> str:

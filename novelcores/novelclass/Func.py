@@ -2,7 +2,7 @@ from bs4 import BeautifulSoup
 from requests import get
 from requests.exceptions import RequestException, HTTPError, InvalidSchema, MissingSchema
 from time import sleep
-from gui.Listeners import Message
+import gui.Listeners
 from os import getcwd, chdir
 
 
@@ -71,7 +71,7 @@ class ExFunc:
             with open(f"{getcwd()}/cache/img/last_novel.jpg", "wb") as image:
                 image.write(download.content)
                 image.close()
-                return True
+                return getcwd() + "/cache/img/last_novel.jpg"
         else:
-            Message.error("Failed to download image")
+            gui.Listeners.Message.error("Failed to download image")
             return False

@@ -60,3 +60,5 @@ class Source:
     @staticmethod
     def get_novel_controller():
         return Source.source_set
+
+
