@@ -7,7 +7,7 @@
 <p> - LightNovelWorld </p>
 <p> - Novel27 </p>
 <p> - NovelFull </p>
-<p> - NovelHall </p>
+<p> - NovelHall [DISABLED] </p>
 <p> - NovelOnlineFull </p>
 <p> - ReadNovelFull </p>
 <p> - WuxiaWorldCo </p>
