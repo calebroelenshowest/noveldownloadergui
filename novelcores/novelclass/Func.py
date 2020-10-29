@@ -1,6 +1,7 @@
 from bs4 import BeautifulSoup
 from requests import get
 from requests.exceptions import RequestException, HTTPError, InvalidSchema, MissingSchema
+from time import sleep
 
 # Functions that do not change per class are stored here.
 
@@ -8,13 +9,17 @@ from requests.exceptions import RequestException, HTTPError, InvalidSchema, Miss
 class ExFunc:
 
     @staticmethod
-    def get_soup(url: str, anti_bot: bool = False):
+    def get_soup(url: str, anti_bot: bool = False, anti_429=False):
         # Please check URL beforehand using Source class
         try:
             if anti_bot:
                 response = get(url, headers={'User-Agent': 'Mozilla/5.0'})
+                if anti_429:
+                    sleep(0.4)
                 if response.status_code == 200:
-                    soup = BeautifulSoup(response.content, 'html.parser')
+                    response.encoding = "utf-8"
+                    soup = BeautifulSoup(response.content.decode('utf-8', 'ignore'), 'html.parser',
+                                         from_encoding="utf-8")
                     return soup
                 else:
                     print("Cannot connect to ", url)
@@ -53,4 +58,3 @@ class ExFunc:
         except Exception as exception:
             print("Failed to get title:")
             print(exception)
-
