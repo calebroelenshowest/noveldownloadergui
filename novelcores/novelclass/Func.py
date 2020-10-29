@@ -2,6 +2,9 @@ from bs4 import BeautifulSoup
 from requests import get
 from requests.exceptions import RequestException, HTTPError, InvalidSchema, MissingSchema
 from time import sleep
+from gui.Listeners import Message
+from os import getcwd, chdir
+
 
 # Functions that do not change per class are stored here.
 
@@ -58,3 +61,17 @@ class ExFunc:
         except Exception as exception:
             print("Failed to get title:")
             print(exception)
+
+    @staticmethod
+    def download_image(url: str):
+        download = get(url)
+        if "\gui" in getcwd():
+            chdir("..")
+        if download.status_code == 200:
+            with open(f"{getcwd()}/cache/img/last_novel.jpg", "wb") as image:
+                image.write(download.content)
+                image.close()
+                return True
+        else:
+            Message.error("Failed to download image")
+            return False

@@ -1,7 +1,11 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtCore import pyqtSlot as register
 from pubsub.pub import sendMessage, subscribe
+from novelcores.novelclass.Exceptions import IncorrectURL, UnknowSourceError
+from threading import Thread
+from novelcores.novelclass.Func import ExFunc
 import gui.Listeners as AppList
+import novelcores.novelclass.Source as SourceManager
 import sys
 import os
 import subprocess
@@ -10,7 +14,7 @@ import subprocess
 class GUI(QtWidgets.QMainWindow):
 
     def __init__(self):
-        # Super
+        # Generated using UI file, edited to fit 'class'
         super().__init__()
         self.setWindowTitle("NovelAPI GUI")
         self.setObjectName("Main")
@@ -141,12 +145,18 @@ class GUI(QtWidgets.QMainWindow):
         self.tabs.setCurrentIndex(0)
         self.translate = QtCore.QCoreApplication.translate
         QtCore.QMetaObject.connectSlotsByName(self)
+        # Finishing __init__
         self.set_text()
         self.register_listeners()
-
-
-        # Events
+        self.load_sources()
         self.show()
+
+        self.source = None
+        self.url = ""
+
+        # Threads
+
+        self.download_novel_info_thread = Thread(target=self.download_novel_info)
 
     def set_text(self):
         self.tabs.setToolTip("Shows novel info")
@@ -164,9 +174,29 @@ class GUI(QtWidgets.QMainWindow):
     def register_listeners(self):
         # Level: GUI
         self.open_folder_btn.clicked.connect(self.open_folder)
+        self.download_info_btn.clicked.connect(self.download_info_btn_event)
 
         # Level: PubSub
         subscribe(self.download_bar_listener, "download_number")
+        subscribe(self.exceptions_listener, "error")
+
+    def load_sources(self):
+        print("Loading cores")
+        names = []
+        for name in SourceManager.source_obj:
+            name_s = name.__name__
+            names.append(str(name_s))
+            self.add_to_output_box(f"Found source {name_s}")
+
+    def download_novel_info(self):
+        self.add_to_output_box(f"NovelController '{self.source.__name__}' passed to Thread. Getting novel information..")
+        soup = self.source.get_soup(self.url)
+        title = self.source.get_title(soup)
+        self.add_to_output_box(f"Found title: {title}")
+        if ExFunc.download_image(self.source.get_url_image(soup)):
+            self.add_to_output_box("Downloaded image")
+        else:
+            self.add_to_output_box("Could not find image!")
 
     @register()
     def open_folder(self):
@@ -174,9 +204,34 @@ class GUI(QtWidgets.QMainWindow):
             os.chdir("..")
         subprocess.Popen(f'explorer "{os.getcwd()}\publish"')
 
+    @register()
+    def download_info_btn_event(self):
+        url = self.get_input_box()
+        self.add_to_output_box(f"Data input: {url}")
+        self.add_to_output_box(f"Searching for source set...")
+        try:
+            if SourceManager.Source.validate(url):
+                self.source = SourceManager.Source.get_novel_controller()
+                self.add_to_output_box(f"Correct source! Found {self.source.__name__}")
+                self.url = url
+                self.download_novel_info_thread.start()
+            else:
+                self.add_to_output_box(f"Failed to get source from url!")
+        except Exception as exe:
+            print(exe)
+
+    def exceptions_listener(self, error: str):
+        self.add_to_output_box(error)
+
     def download_bar_listener(self, max_val, now_val):
         percentage = int((now_val / max_val) * 100)
         self.progressbar.setValue(percentage)
+
+    def add_to_output_box(self, data):
+        self.output_field.append(data)
+
+    def get_input_box(self):
+        return self.url_input_box.text()
 
 
 if __name__ == "__main__":

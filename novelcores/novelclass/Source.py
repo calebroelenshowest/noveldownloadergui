@@ -6,6 +6,7 @@ from pubsub.pub import sendMessage
 from requests import get
 from requests.exceptions import RequestException, HTTPError, InvalidSchema, MissingSchema
 from novelcores.novelclass.Exceptions import IncorrectURL, UnknowSourceError
+from gui.Listeners import Message
 
 # NOVEL core imports
 
@@ -33,7 +34,8 @@ class Source:
                             Source.source_set = source
                             break
                     if Source.source_set is None:
-                        raise UnknowSourceError("Failed to find source sheme.")
+                        Message.error("Failed to find source sheme!")
+                        return False
                     else:
                         c = Source.source_set.slash
                         if url[-1] == "/":
@@ -43,13 +45,17 @@ class Source:
                         if c == url.count("/")+s:
                             return True
                         else:
-                            raise IncorrectURL("URL source is found, but the wrong page is selected.")
+                            Message.error("URL source is found, but the wrong page is selected.")
+                            return False
                 else:
-                    raise IncorrectURL("URL incorrect. No HTTP or HTTPS in the URL.")
+                    Message.error("URL incorrect. No HTTP or HTTPS in the URL.")
+                    return False
             else:
-                raise ValueError("URL cannot be empty")
+                Message.error("URL cannot be empty")
+                return False
         else:
-            raise TypeError("URL must be a string type!")
+            Message.error("URL must be a string type!")
+            return False
 
     @staticmethod
     def get_novel_controller():
